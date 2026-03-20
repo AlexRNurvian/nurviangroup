@@ -278,11 +278,17 @@ nav {
   padding: 100px 60px;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
-.about-image-wrap { position: relative; z-index: 0; }
+.about-image-wrap {
+  position: relative;
+  z-index: 0;
+}
+/* CSS background instead of <img> to avoid broken alt text on GitHub Pages */
 .about-image {
   width: 100%;
   aspect-ratio: 4/3;
-  object-fit: cover;
+  background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80');
+  background-size: cover;
+  background-position: center;
   filter: brightness(0.8) saturate(0.7);
   display: block;
   position: relative;
@@ -358,17 +364,21 @@ nav {
 }
 
 /* ── IMAGE BREAK ── */
+/* Uses CSS background-image instead of <img> tag to prevent broken alt text on GitHub Pages */
 .image-break {
   width: 100%;
   height: 400px;
   position: relative;
   overflow: hidden;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Oxford_University_and_City_Panoramic_Aerial_View.jpg/1280px-Oxford_University_and_City_Panoramic_Aerial_View.jpg');
+  background-size: cover;
+  background-position: center 40%;
 }
-.image-break img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.3) saturate(0.5);
+.image-break::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10,22,40,0.72);
 }
 .image-break-overlay {
   position: absolute;
@@ -379,7 +389,6 @@ nav {
   flex-direction: column;
   text-align: center;
   padding: 40px;
-  background: linear-gradient(180deg, rgba(10,22,40,0.4), rgba(10,22,40,0.7));
 }
 .image-break-quote {
   font-family: 'Cormorant Garamond', serif;
@@ -736,7 +745,6 @@ footer {
     <div class="hero-wordmark">Nurvian<span>.</span></div>
     <div class="hero-divider"></div>
     <div class="hero-motto">Clarity of thought. Precision of counsel.</div>
-
     <a href="#about" class="hero-cta">Discover More</a>
   </div>
   <div class="hero-scroll">
@@ -748,9 +756,8 @@ footer {
 <!-- ABOUT -->
 <div id="about">
   <div class="about-image-wrap">
-    <img class="about-image"
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Oxford_University_and_City_Panoramic_Aerial_View.jpg/1280px-Oxford_University_and_City_Panoramic_Aerial_View.jpg"
-      alt="Oxford skyline" />
+    <!-- div with CSS background instead of <img> — prevents broken alt text if image fails to load -->
+    <div class="about-image"></div>
     <div class="about-image-border"></div>
   </div>
   <div class="about-text">
@@ -814,9 +821,8 @@ footer {
 </div>
 
 <!-- IMAGE BREAK -->
+<!-- No <img> tag here — background is set via CSS to avoid broken alt text on GitHub Pages -->
 <div class="image-break">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Oxford_University_and_City_Panoramic_Aerial_View.jpg/1280px-Oxford_University_and_City_Panoramic_Aerial_View.jpg"
-    alt="Background" />
   <div class="image-break-overlay">
     <div class="image-break-quote">"Clarity at every level of the organisation, from laboratory bench to boardroom."</div>
     <div class="image-break-attr">Nurvian &nbsp;·&nbsp; Oxford</div>
@@ -906,7 +912,6 @@ footer {
   </div>
 </div>
 
-
 <!-- PROFILE -->
 <div id="profile">
   <div class="section-label">Principal</div>
@@ -954,7 +959,7 @@ footer {
     <div>
       <div class="contact-detail">
         <div class="contact-detail-label">Email</div>
-        <div class="contact-detail-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c8a9a4adb0a9a6acadba88a6bdbabea1a9a6e6aba7e6bda3">[email&#160;protected]</a></div>
+        <div class="contact-detail-value">alexander@nurvian.co.uk</div>
       </div>
       <div class="contact-detail">
         <div class="contact-detail-label">Website</div>
@@ -971,7 +976,7 @@ footer {
         <input class="form-input" type="email" placeholder="Email Address" />
       </div>
       <input class="form-input" type="text" placeholder="Organisation" />
-      <textarea class="form-textarea form-input" placeholder="How can Nurvian help you?"></textarea>
+      <textarea class="form-input" placeholder="How can Nurvian help you?"></textarea>
       <button class="form-btn">Send Enquiry</button>
     </div>
   </div>
@@ -979,4 +984,9 @@ footer {
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-lo
+  <div class="footer-logo">Nurvian<span>.</span></div>
+  <div class="footer-copy">© 2025 Nurvian. Oxford, United Kingdom.</div>
+</footer>
+
+</body>
+</html>
