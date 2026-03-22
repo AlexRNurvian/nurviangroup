@@ -1,0 +1,123 @@
+<svg width="100%" viewBox="0 0 680 510" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&amp;family=Barlow+Condensed:wght@400&amp;family=Barlow:wght@300&amp;display=swap');
+  </style>
+  <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#112240" stop-opacity="0.95"/>
+    <stop offset="100%" stop-color="#0a1628" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="g2" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#1a3461" stop-opacity="0.5"/>
+    <stop offset="100%" stop-color="#1a3461" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+
+<rect width="680" height="510" fill="#0a1628"/>
+
+<g opacity="0.035" stroke="#8a9bb5" stroke-width="0.5">
+  <line x1="0" y1="85" x2="680" y2="85"/><line x1="0" y1="170" x2="680" y2="170"/>
+  <line x1="0" y1="255" x2="680" y2="255"/><line x1="0" y1="340" x2="680" y2="340"/>
+  <line x1="0" y1="425" x2="680" y2="425"/><line x1="85" y1="0" x2="85" y2="510"/>
+  <line x1="170" y1="0" x2="170" y2="510"/><line x1="255" y1="0" x2="255" y2="510"/>
+  <line x1="340" y1="0" x2="340" y2="510"/><line x1="425" y1="0" x2="425" y2="510"/>
+  <line x1="510" y1="0" x2="510" y2="510"/><line x1="595" y1="0" x2="595" y2="510"/>
+</g>
+
+<ellipse cx="340" cy="255" rx="210" ry="210" fill="url(#g1)" opacity="0.9"/>
+<ellipse cx="340" cy="255" rx="130" ry="130" fill="url(#g2)"/>
+
+<circle cx="340" cy="255" r="188" stroke="rgba(138,155,181,0.08)" stroke-width="0.5" fill="none"/>
+<circle cx="340" cy="255" r="168" stroke="rgba(138,155,181,0.1)" stroke-width="0.5" fill="none"/>
+<circle cx="340" cy="255" r="125" stroke="rgba(138,155,181,0.12)" stroke-width="0.5" fill="none" stroke-dasharray="4 7"/>
+<circle cx="340" cy="255" r="74" stroke="rgba(138,155,181,0.18)" stroke-width="0.7" fill="none"/>
+
+<g stroke="#8a9bb5" stroke-width="0.7" opacity="0.25">
+  <line x1="340" y1="67" x2="340" y2="78"/><line x1="340" y1="432" x2="340" y2="443"/>
+  <line x1="152" y1="255" x2="163" y2="255"/><line x1="517" y1="255" x2="528" y2="255"/>
+  <line x1="207" y1="122" x2="215" y2="130"/><line x1="465" y1="380" x2="473" y2="388"/>
+  <line x1="465" y1="122" x2="473" y2="130"/><line x1="207" y1="380" x2="215" y2="388"/>
+</g>
+
+<g stroke="rgba(138,155,181,0.1)" stroke-width="0.5">
+  <line x1="340" y1="255" x2="340" y2="130"/><line x1="340" y1="255" x2="340" y2="380"/>
+  <line x1="340" y1="255" x2="215" y2="255"/><line x1="340" y1="255" x2="465" y2="255"/>
+  <line x1="340" y1="255" x2="232" y2="147"/><line x1="340" y1="255" x2="448" y2="363"/>
+  <line x1="340" y1="255" x2="448" y2="147"/><line x1="340" y1="255" x2="232" y2="363"/>
+</g>
+
+<!-- Science & Tech -->
+<circle cx="340" cy="181" r="18" fill="#0d1d36" stroke="rgba(138,155,181,0.3)" stroke-width="0.7"/>
+<circle cx="340" cy="181" r="3.5" fill="#8a9bb5" opacity="0.8"/>
+<ellipse cx="340" cy="181" rx="9" ry="3.5" fill="none" stroke="#8a9bb5" stroke-width="0.6" opacity="0.5"/>
+<ellipse cx="340" cy="181" rx="9" ry="3.5" fill="none" stroke="#8a9bb5" stroke-width="0.6" opacity="0.5" transform="rotate(60 340 181)"/>
+<ellipse cx="340" cy="181" rx="9" ry="3.5" fill="none" stroke="#8a9bb5" stroke-width="0.6" opacity="0.5" transform="rotate(-60 340 181)"/>
+<text font-family="'Barlow Condensed', sans-serif" font-size="9" letter-spacing="2.5" fill="rgba(138,155,181,0.55)" x="340" y="157" text-anchor="middle">SCIENCE &amp; TECH</text>
+
+<!-- Governance -->
+<circle cx="427" cy="218" r="18" fill="#0d1d36" stroke="rgba(138,155,181,0.3)" stroke-width="0.7"/>
+<rect x="421" y="210" width="2.5" height="10" fill="#8a9bb5" opacity="0.6" rx="0.3"/>
+<rect x="426" y="210" width="2.5" height="10" fill="#8a9bb5" opacity="0.6" rx="0.3"/>
+<rect x="431" y="210" width="2.5" height="10" fill="#8a9bb5" opacity="0.6" rx="0.3"/>
+<rect x="420" y="209" width="14" height="1.5" fill="#8a9bb5" opacity="0.4"/>
+<rect x="420" y="220" width="14" height="1.5" fill="#8a9bb5" opacity="0.4"/>
+<text font-family="'Barlow Condensed', sans-serif" font-size="9" letter-spacing="2.5" fill="rgba(138,155,181,0.55)" x="454" y="221" text-anchor="start">GOVERNANCE</text>
+
+<!-- Strategy -->
+<circle cx="427" cy="292" r="18" fill="#0d1d36" stroke="rgba(138,155,181,0.3)" stroke-width="0.7"/>
+<path d="M421 299 L427 288 L433 299" fill="none" stroke="#8a9bb5" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+<text font-family="'Barlow Condensed', sans-serif" font-size="9" letter-spacing="2.5" fill="rgba(138,155,181,0.55)" x="454" y="295" text-anchor="start">STRATEGY</text>
+
+<!-- Policy -->
+<circle cx="340" cy="329" r="18" fill="#0d1d36" stroke="rgba(138,155,181,0.3)" stroke-width="0.7"/>
+<rect x="334" y="321" width="12" height="14" rx="1.5" fill="none" stroke="#8a9bb5" stroke-width="0.6" opacity="0.5"/>
+<line x1="337" y1="325" x2="343" y2="325" stroke="#8a9bb5" stroke-width="0.7" opacity="0.6"/>
+<line x1="337" y1="328" x2="343" y2="328" stroke="#8a9bb5" stroke-width="0.7" opacity="0.6"/>
+<line x1="337" y1="331" x2="341" y2="331" stroke="#8a9bb5" stroke-width="0.7" opacity="0.6"/>
+<text font-family="'Barlow Condensed', sans-serif" font-size="9" letter-spacing="2.5" fill="rgba(138,155,181,0.55)" x="340" y="357" text-anchor="middle">POLICY</text>
+
+<!-- Leadership -->
+<circle cx="253" cy="292" r="18" fill="#0d1d36" stroke="rgba(138,155,181,0.3)" stroke-width="0.7"/>
+<circle cx="253" cy="284" r="3.5" fill="#8a9bb5" opacity="0.6"/>
+<path d="M246 300 Q253 295 260 300" fill="none" stroke="#8a9bb5" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+<text font-family="'Barlow Condensed', sans-serif" font-size="9" letter-spacing="2.5" fill="rgba(138,155,181,0.55)" x="226" y="295" text-anchor="end">LEADERSHIP</text>
+
+<!-- Innovation -->
+<circle cx="253" cy="218" r="18" fill="#0d1d36" stroke="rgba(138,155,181,0.3)" stroke-width="0.7"/>
+<path d="M250 215 Q253 209 256 215 L257 220 L249 220 Z" fill="#8a9bb5" opacity="0.5"/>
+<rect x="250" y="220" width="6" height="2.5" rx="0.5" fill="#8a9bb5" opacity="0.4"/>
+<text font-family="'Barlow Condensed', sans-serif" font-size="9" letter-spacing="2.5" fill="rgba(138,155,181,0.55)" x="226" y="221" text-anchor="end">INNOVATION</text>
+
+<circle cx="340" cy="80" r="2.5" fill="#8a9bb5" opacity="0.3"/>
+<circle cx="502" cy="158" r="1.8" fill="#8a9bb5" opacity="0.2"/>
+<circle cx="502" cy="352" r="2.5" fill="#8a9bb5" opacity="0.25"/>
+<circle cx="340" cy="430" r="1.8" fill="#8a9bb5" opacity="0.2"/>
+<circle cx="178" cy="352" r="2.5" fill="#8a9bb5" opacity="0.25"/>
+<circle cx="178" cy="158" r="1.8" fill="#8a9bb5" opacity="0.2"/>
+
+<!-- Central medallion -->
+<circle cx="340" cy="255" r="50" fill="#0a1628" stroke="rgba(138,155,181,0.2)" stroke-width="0.8"/>
+<circle cx="340" cy="255" r="44" fill="#0a1628" stroke="rgba(138,155,181,0.1)" stroke-width="0.5"/>
+
+<text
+  font-family="'Cormorant Garamond', Georgia, serif"
+  font-size="46"
+  font-weight="300"
+  font-style="normal"
+  fill="#8a9bb5"
+  x="333"
+  y="272"
+  text-anchor="middle">N</text>
+<circle cx="352" cy="269" r="2.8" fill="#c9a84c"/>
+
+<!-- Corner marks -->
+<g stroke="rgba(138,155,181,0.2)" stroke-width="0.8" fill="none">
+  <path d="M32 32 L52 32 L52 52"/>
+  <path d="M648 32 L628 32 L628 52"/>
+  <path d="M32 478 L52 478 L52 458"/>
+  <path d="M648 478 L628 478 L628 458"/>
+</g>
+<line x1="60" y1="32" x2="620" y2="32" stroke="rgba(138,155,181,0.08)" stroke-width="0.5"/>
+<line x1="60" y1="478" x2="620" y2="478" stroke="rgba(138,155,181,0.08)" stroke-width="0.5"/>
+
+</svg>
