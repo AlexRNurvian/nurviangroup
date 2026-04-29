@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nurvian | Task Command</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --accent: #c8400a;
+    --gold: #b8860b;
+    --muted: #8a8070;
+    --overdue: #c8400a;
+    --urgent: #d4730a;
+    --upcoming: #5a7a3a;
+    --future: #2a5a7a;
+    --done: #7a9a6a;
+    --sync-ok: #5a7a3a;
+    --sync-err: #c8400a;
+    --sync-busy: #b8860b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 15px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--paper);
+  }
+
+  .subtitle {
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+  }
+
+  .sync-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .sync-dot.ok     { background: var(--sync-ok); }
+  .sync-dot.error  { background: var(--sync-err); }
+  .sync-dot.busy   { background: var(--sync-busy); animation: pulse 1s infinite; }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+
+  .sync-label { color: var(--muted); }
+
+  .date-strip {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  /* Setup screen */
+  .setup-screen {
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+
+  .setup-card {
+    background: white;
+    border-radius: 4px;
+    border-top: 4px solid var(--accent);
+    padding: 28px;
+  }
+
+  .setup-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+
+  .setup-card p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .setup-input-wrap {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .setup-url-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--paper);
+    border: 1.5px solid #ccc8bc;
+    border-radius: 2px;
+    padding: 10px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .setup-url-input:focus { border-color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 10px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .btn-primary:hover { background: #a83308; }
+
+  .setup-steps {
+    margin-top: 22px;
+    border-top: 1px solid #ddd8cc;
+    padding-top: 18px;
+  }
+
+  .setup-steps h3 {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 22px; height: 22px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text {
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .step-text a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .step-text a:hover { text-decoration: underline; }
+
+  .code-block {
+    background: var(--ink);
+    color: #a8e0a0;
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-size: 0.72rem;
+    margin: 8px 0;
+    line-height: 1.6;
+    word-break: break-all;
+  }
+
+  .inline-code {
+    background: var(--cream);
+    border: 1px solid #ccc8bc;
+    border-radius: 2px;
+    padding: 1px 5px;
+    font-size: 0.8em;
+  }
+
+  /* Main app */
+  .app-screen { display: none; }
+  .app-screen.visible { display: block; }
+
+  .main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 16px 80px;
+  }
+
+  .summary {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .summary-chip {
+    padding: 4px 11px;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1.5px solid currentColor;
+  }
+
+  .chip-overdue { color: var(--overdue); background: #fff3ef; }
+  .chip-urgent  { color: var(--urgent);  background: #fff8ef; }
+  .chip-upcoming{ color: var(--upcoming);background: #f0f5ec; }
+  .chip-done    { color: var(--done);    background: #f2f5ee; }
+
+  .add-form {
+    background: var(--cream);
+    border: 1.5px solid #ccc8bc;
+    border-radius: 3px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .add-form h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .form-group label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input[type="text"], input[type="date"], select {
+    background: var(--paper);
+    border: 1.5px solid #ccc8bc;
+    border-radius: 2px;
+    padding: 8px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input:focus, select:focus { border-color: var(--accent); }
+
+  .task-input { flex: 1; min-width: 180px; }
+  .date-input { width: 148px; }
+  .cat-select { width: 136px; }
+  .remind-select { width: 136px; }
+
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-bar span {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1.5px solid #ccc8bc;
+    border-radius: 2px;
+    padding: 4px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 16px 0 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd8cc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot-overdue { background: var(--overdue); }
+  .dot-urgent  { background: var(--urgent); }
+  .dot-upcoming{ background: var(--upcoming); }
+  .dot-future  { background: var(--future); }
+  .dot-done    { background: var(--done); }
+
+  .task-item {
+    background: white;
+    border-left: 4px solid #ccc;
+    border-radius: 0 3px 3px 0;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    transition: box-shadow 0.15s, opacity 0.15s;
+  }
+
+  .task-item:hover { box-shadow: 2px 2px 8px rgba(0,0,0,0.07); }
+  .task-item.overdue { border-left-color: var(--overdue); }
+  .task-item.urgent  { border-left-color: var(--urgent); }
+  .task-item.upcoming{ border-left-color: var(--upcoming); }
+  .task-item.future  { border-left-color: var(--future); }
+  .task-item.done    { border-left-color: var(--done); opacity: 0.55; }
+
+  .task-check {
+    width: 17px; height: 17px;
+    border: 2px solid #aaa;
+    border-radius: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    background: white;
+  }
+
+  .task-check:hover { border-color: var(--accent); }
+  .task-item.done .task-check { background: var(--done); border-color: var(--done); }
+  .tick { color: white; font-size: 10px; display: none; }
+  .task-item.done .tick { display: block; }
+
+  .task-body { flex: 1; min-width: 0; }
+
+  .task-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .task-item.done .task-title { text-decoration: line-through; color: var(--muted); }
+
+  .task-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .meta-date { font-size: 0.66rem; }
+  .meta-date.overdue { color: var(--overdue); font-weight: 500; }
+  .meta-date.urgent  { color: var(--urgent); }
+  .meta-date.upcoming{ color: var(--upcoming); }
+  .meta-date.future  { color: var(--future); }
+
+  .meta-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--cream);
+    padding: 1px 6px;
+    border-radius: 2px;
+    border: 1px solid #ddd8cc;
+  }
+
+  .days-badge {
+    font-size: 0.63rem;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  .badge-overdue { background: #fde8e0; color: var(--overdue); }
+  .badge-urgent  { background: #fdf0e0; color: var(--urgent); }
+  .badge-today   { background: #fff3cd; color: #856404; }
+  .badge-upcoming{ background: #e8f0e4; color: var(--upcoming); }
+  .badge-future  { background: #e0eaf0; color: var(--future); }
+
+  .task-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.72rem;
+    color: #bbb;
+    padding: 3px 5px;
+    border-radius: 2px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .btn-icon:hover { color: var(--ink); background: var(--cream); }
+  .btn-icon.del:hover { color: var(--overdue); }
+
+  .empty {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--muted);
+    font-size: 0.76rem;
+  }
+
+  .alert-bar {
+    background: #fde8e0;
+    border-left: 4px solid var(--overdue);
+    color: var(--overdue);
+    padding: 8px 14px;
+    font-size: 0.73rem;
+    margin-bottom: 14px;
+    border-radius: 0 3px 3px 0;
+    display: none;
+  }
+
+  .alert-bar.show { display: block; }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(26,26,46,0.6);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-bg.open { display: flex; }
+
+  .modal {
+    background: var(--paper);
+    border-radius: 4px;
+    padding: 22px;
+    width: 100%;
+    max-width: 460px;
+    border-top: 4px solid var(--accent);
+  }
+
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .mfg { margin-bottom: 11px; display: flex; flex-direction: column; gap: 4px; }
+  .mfg label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .mfg input, .mfg select { width: 100%; }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1.5px solid #ccc8bc;
+    border-radius: 2px;
+    padding: 7px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.76rem;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .btn-save {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 7px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.76rem;
+    cursor: pointer;
+  }
+
+  /* Banner */
+  .banner {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 9px 18px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    border-left: 4px solid var(--accent);
+  }
+
+  .banner.show { opacity: 1; }
+
+  /* Change URL link */
+  .change-url {
+    font-size: 0.63rem;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    padding: 0;
+  }
+
+  .change-url:hover { color: var(--ink); }
+
+  @media (max-width: 500px) {
+    header { padding: 12px 14px; }
+    header h1 { font-size: 1.1rem; }
+    .form-row { flex-direction: column; }
+    .task-input, .date-input, .cat-select, .remind-select { width: 100%; }
+    .date-strip { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Task Command</h1>
+    <div class="subtitle">Nurvian · Portfolio Tracker</div>
+  </div>
+  <div class="header-right">
+    <div class="sync-status" id="syncStatus">
+      <div class="sync-dot" id="syncDot"></div>
+      <span class="sync-label" id="syncLabel">Not connected</span>
+    </div>
+    <div class="date-strip" id="headerDate"></div>
+  </div>
+</header>
+
+<!-- SETUP SCREEN -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <h2>Connect to Google Sheets</h2>
+    <p>Your tasks will sync automatically to a Google Sheet — accessible from any device, for free. Complete the steps below, then paste your Web App URL here.</p>
+
+    <div class="setup-input-wrap">
+      <input type="text" class="setup-url-input" id="scriptUrl" placeholder="Paste your Web App URL here..." />
+      <button class="btn-primary" onclick="connectScript()">Connect</button>
+    </div>
+
+    <div class="setup-steps">
+      <h3>One-time setup (5 minutes)</h3>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          Open <a href="https://sheets.google.com" target="_blank">Google Sheets</a> and create a new blank spreadsheet. Name it something like <span class="inline-code">Nurvian Tasks</span>.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          In the spreadsheet, click <strong>Extensions</strong> in the top menu, then <strong>Apps Script</strong>. This opens the script editor in a new tab.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          Delete everything in the editor. Open the file <strong>apps-script.js</strong> (provided alongside this HTML file), copy the entire contents, and paste it into the Apps Script editor. Click the <strong>Save</strong> icon (or Ctrl+S).
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          Click <strong>Deploy</strong> (top right) → <strong>New deployment</strong>. Set type to <strong>Web app</strong>. Set <em>Execute as</em>: <strong>Me</strong>. Set <em>Who has access</em>: <strong>Anyone</strong>. Click <strong>Deploy</strong>.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">
+          Google will ask you to authorise the app. Click <strong>Authorise access</strong>, choose your Google account, then click <strong>Advanced</strong> → <strong>Go to [project name] (unsafe)</strong> → <strong>Allow</strong>. (This is your own script — it's safe.)
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-text">
+          After deploying, copy the <strong>Web app URL</strong> (starts with <span class="inline-code">https://script.google.com/macros/s/...</span>) and paste it in the box above. Click <strong>Connect</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP SCREEN -->
+<div class="app-screen" id="appScreen">
+  <div class="main">
+
+    <div class="alert-bar" id="alertBar"></div>
+    <div class="summary" id="summary"></div>
+
+    <div class="add-form">
+      <h2>Add Task</h2>
+      <div class="form-row">
+        <div class="form-group" style="flex:1;min-width:180px;">
+          <label>Task</label>
+          <input type="text" class="task-input" id="newTitle" placeholder="What needs doing?" />
+        </div>
+        <div class="form-group">
+          <label>Deadline</label>
+          <input type="date" class="date-input" id="newDate" />
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select class="cat-select" id="newCat">
+            <option value="general">General</option>
+            <option value="governance">Governance</option>
+            <option value="advisory">Advisory</option>
+            <option value="technical">Technical</option>
+            <option value="legal-hr">Legal / HR</option>
+            <option value="comms">Comms</option>
+            <option value="finance">Finance</option>
+            <option value="personal">Personal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Remind</label>
+          <select class="remind-select" id="newRemind">
+            <option value="1">1 day before</option>
+            <option value="3" selected>3 days before</option>
+            <option value="7">1 week before</option>
+            <option value="14">2 weeks before</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="addTask()">+ Add</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <span>Show:</span>
+      <button class="filter-btn active" onclick="setFilter(this,'active')">Active</button>
+      <button class="filter-btn" onclick="setFilter(this,'all')">All</button>
+      <button class="filter-btn" onclick="setFilter(this,'done')">Done</button>
+      <button class="filter-btn" onclick="setFilter(this,'overdue')">Overdue</button>
+    </div>
+
+    <div id="taskList"></div>
+
+    <div style="margin-top:24px; padding:12px 14px; background:var(--cream); border-radius:3px; border:1px solid #ddd8cc; font-size:0.68rem; color:var(--muted); line-height:1.6;">
+      Tasks sync automatically to your Google Sheet.
+      <button class="change-url" onclick="changeUrl()" style="margin-left:8px;">Change connection URL</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>Edit Task</h3>
+    <div class="mfg"><label>Task</label><input type="text" id="editTitle" /></div>
+    <div class="mfg"><label>Deadline</label><input type="date" id="editDate" /></div>
+    <div class="mfg">
+      <label>Category</label>
+      <select id="editCat">
+        <option value="general">General</option>
+        <option value="governance">Governance</option>
+        <option value="advisory">Advisory</option>
+        <option value="technical">Technical</option>
+        <option value="legal-hr">Legal / HR</option>
+        <option value="comms">Comms</option>
+        <option value="finance">Finance</option>
+        <option value="personal">Personal</option>
+      </select>
+    </div>
+    <div class="mfg">
+      <label>Remind me</label>
+      <select id="editRemind">
+        <option value="1">1 day before</option>
+        <option value="3">3 days before</option>
+        <option value="7">1 week before</option>
+        <option value="14">2 weeks before</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<script>
+  const URL_KEY = 'nurvian_script_url';
+  let tasks = [];
+  let editingId = null;
+  let currentFilter = 'active';
+  let syncTimeout = null;
+
+  // ---- URL / Connection ----
+
+  function getScriptUrl() {
+    return localStorage.getItem(URL_KEY) || '';
+  }
+
+  function connectScript() {
+    const url = document.getElementById('scriptUrl').value.trim();
+    if (!url.startsWith('https://script.google.com')) {
+      showBanner('Please paste a valid Apps Script URL.');
+      return;
+    }
+    localStorage.setItem(URL_KEY, url);
+    init();
+  }
+
+  function changeUrl() {
+    localStorage.removeItem(URL_KEY);
+    document.getElementById('setupScreen').style.display = 'block';
+    document.getElementById('appScreen').classList.remove('visible');
+    document.getElementById('scriptUrl').value = '';
+  }
+
+  // ---- Sync ----
+
+  function setSyncStatus(state, label) {
+    const dot = document.getElementById('syncDot');
+    const lbl = document.getElementById('syncLabel');
+    dot.className = 'sync-dot ' + state;
+    lbl.textContent = label;
+  }
+
+  async function fetchTasks() {
+    const url = getScriptUrl();
+    if (!url) return;
+    setSyncStatus('busy', 'Loading...');
+    try {
+      const res = await fetch(url + '?action=getTasks');
+      const data = await res.json();
+      if (data.tasks) {
+        tasks = data.tasks;
+        setSyncStatus('ok', 'Synced');
+        render();
+      } else {
+        setSyncStatus('error', 'Sync error');
+      }
+    } catch(e) {
+      setSyncStatus('error', 'Offline');
+      showBanner('Could not reach Google Sheets — working offline.');
+    }
+  }
+
+  async function pushTasks() {
+    const url = getScriptUrl();
+    if (!url) return;
+    setSyncStatus('busy', 'Saving...');
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'saveTasks', tasks })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSyncStatus('ok', 'Saved to Sheets');
+      } else {
+        setSyncStatus('error', 'Save failed');
+      }
+    } catch(e) {
+      setSyncStatus('error', 'Save failed');
+    }
+  }
+
+  function debouncedPush() {
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(pushTasks, 800);
+  }
+
+  // ---- Task logic ----
+
+  function today() {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function parseDate(str) {
+    if (!str) return null;
+    const [y,m,d] = str.split('-').map(Number);
+    return new Date(y, m-1, d);
+  }
+
+  function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    return Math.round((parseDate(dateStr) - today()) / 86400000);
+  }
+
+  function taskStatus(task) {
+    if (task.done) return 'done';
+    const d = daysUntil(task.date);
+    if (d === null) return 'future';
+    if (d < 0) return 'overdue';
+    if (d <= parseInt(task.remind || 3)) return 'urgent';
+    if (d <= 14) return 'upcoming';
+    return 'future';
+  }
+
+  function badgeText(days) {
+    if (days === null) return '';
+    if (days < 0) return Math.abs(days) + 'd overdue';
+    if (days === 0) return 'TODAY';
+    if (days === 1) return 'Tomorrow';
+    return days + 'd left';
+  }
+
+  function badgeClass(days) {
+    if (days === null) return '';
+    if (days < 0) return 'badge-overdue';
+    if (days === 0) return 'badge-today';
+    if (days <= 3) return 'badge-urgent';
+    if (days <= 14) return 'badge-upcoming';
+    return 'badge-future';
+  }
+
+  function addTask() {
+    const title = document.getElementById('newTitle').value.trim();
+    if (!title) { showBanner('Please enter a task title.'); return; }
+    const task = {
+      id: Date.now().toString(),
+      title,
+      date: document.getElementById('newDate').value,
+      cat: document.getElementById('newCat').value,
+      remind: document.getElementById('newRemind').value,
+      done: false,
+      created: new Date().toISOString()
+    };
+    tasks.unshift(task);
+    document.getElementById('newTitle').value = '';
+    document.getElementById('newDate').value = '';
+    render();
+    debouncedPush();
+    showBanner('Task added.');
+  }
+
+  function toggleDone(id) {
+    const t = tasks.find(x => x.id === id);
+    if (t) { t.done = !t.done; render(); debouncedPush(); }
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(x => x.id !== id);
+    render();
+    debouncedPush();
+    showBanner('Task removed.');
+  }
+
+  function openEdit(id) {
+    const t = tasks.find(x => x.id === id);
+    if (!t) return;
+    editingId = id;
+    document.getElementById('editTitle').value = t.title;
+    document.getElementById('editDate').value = t.date || '';
+    document.getElementById('editCat').value = t.cat || 'general';
+    document.getElementById('editRemind').value = t.remind || '3';
+    document.getElementById('modalBg').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalBg').classList.remove('open');
+    editingId = null;
+  }
+
+  function saveEdit() {
+    const t = tasks.find(x => x.id === editingId);
+    if (t) {
+      t.title = document.getElementById('editTitle').value.trim() || t.title;
+      t.date = document.getElementById('editDate').value;
+      t.cat = document.getElementById('editCat').value;
+      t.remind = document.getElementById('editRemind').value;
+      render();
+      debouncedPush();
+      showBanner('Task updated.');
+    }
+    closeModal();
+  }
+
+  function setFilter(btn, f) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function filterTasks() {
+    if (currentFilter === 'all') return tasks;
+    if (currentFilter === 'done') return tasks.filter(t => t.done);
+    if (currentFilter === 'overdue') return tasks.filter(t => !t.done && daysUntil(t.date) !== null && daysUntil(t.date) < 0);
+    return tasks.filter(t => !t.done);
+  }
+
+  function render() {
+    document.getElementById('headerDate').textContent = new Date().toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+
+    const all = tasks.filter(t => !t.done);
+    const overdue = all.filter(t => daysUntil(t.date) !== null && daysUntil(t.date) < 0);
+    const urgent = all.filter(t => { const d = daysUntil(t.date); return d !== null && d >= 0 && d <= 3; });
+    const upcoming = all.filter(t => { const d = daysUntil(t.date); return d !== null && d > 3 && d <= 14; });
+    const done = tasks.filter(t => t.done);
+
+    document.getElementById('summary').innerHTML =
+      (overdue.length ? `<div class="summary-chip chip-overdue">⚠ ${overdue.length} overdue</div>` : '') +
+      (urgent.length  ? `<div class="summary-chip chip-urgent">▲ ${urgent.length} urgent</div>` : '') +
+      (upcoming.length? `<div class="summary-chip chip-upcoming">◆ ${upcoming.length} upcoming</div>` : '') +
+      `<div class="summary-chip chip-done">✓ ${done.length} done</div>`;
+
+    const alertBar = document.getElementById('alertBar');
+    if (overdue.length && currentFilter !== 'done') {
+      alertBar.classList.add('show');
+      alertBar.textContent = `⚠ ${overdue.length} overdue task${overdue.length > 1 ? 's' : ''} — action needed.`;
+    } else {
+      alertBar.classList.remove('show');
+    }
+
+    const filtered = filterTasks();
+    const container = document.getElementById('taskList');
+
+    if (!filtered.length) {
+      container.innerHTML = '<div class="empty">No tasks here. Add one above.</div>';
+      return;
+    }
+
+    let sections = [];
+    if (currentFilter === 'done') {
+      sections = [{ label:'Completed', dot:'done', items: filtered }];
+    } else if (currentFilter === 'overdue') {
+      sections = [{ label:'Overdue', dot:'overdue', items: filtered }];
+    } else {
+      const ov = filtered.filter(t => daysUntil(t.date) !== null && daysUntil(t.date) < 0);
+      const ur = filtered.filter(t => { const d = daysUntil(t.date); return d !== null && d >= 0 && d <= parseInt(t.remind||3); });
+      const up = filtered.filter(t => { const d = daysUntil(t.date); return d !== null && d > parseInt(t.remind||3) && d <= 14; });
+      const fu = filtered.filter(t => { const d = daysUntil(t.date); return d === null || d > 14; });
+      if (ov.length) sections.push({ label:'Overdue', dot:'overdue', items: ov });
+      if (ur.length) sections.push({ label:'Urgent / Due soon', dot:'urgent', items: ur });
+      if (up.length) sections.push({ label:'Coming up', dot:'upcoming', items: up });
+      if (fu.length) sections.push({ label:'On the horizon', dot:'future', items: fu });
+    }
+
+    let html = '';
+    for (const sec of sections) {
+      html += `<div class="section-label"><span class="dot dot-${sec.dot}"></span>${sec.label}</div>`;
+      for (const t of sec.items) {
+        const status = taskStatus(t);
+        const days = daysUntil(t.date);
+        const dateDisp = t.date ? parseDate(t.date).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) : '';
+        const badge = days !== null ? `<span class="days-badge ${badgeClass(days)}">${badgeText(days)}</span>` : '';
+        html += `
+          <div class="task-item ${status}">
+            <div class="task-check" onclick="toggleDone('${t.id}')"><span class="tick">✓</span></div>
+            <div class="task-body">
+              <div class="task-title">${esc(t.title)}</div>
+              <div class="task-meta">
+                ${dateDisp ? `<span class="meta-date ${status}">📅 ${dateDisp}</span>` : ''}
+                ${badge}
+                <span class="meta-cat">${t.cat || 'general'}</span>
+              </div>
+            </div>
+            <div class="task-actions">
+              <button class="btn-icon" onclick="openEdit('${t.id}')" title="Edit">✎</button>
+              <button class="btn-icon del" onclick="deleteTask('${t.id}')" title="Delete">✕</button>
+            </div>
+          </div>`;
+      }
+    }
+    container.innerHTML = html;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showBanner(msg) {
+    const b = document.getElementById('banner');
+    b.textContent = msg;
+    b.classList.add('show');
+    setTimeout(() => b.classList.remove('show'), 2400);
+  }
+
+  // ---- Init ----
+
+  async function init() {
+    const url = getScriptUrl();
+    if (!url) {
+      document.getElementById('setupScreen').style.display = 'block';
+      document.getElementById('appScreen').classList.remove('visible');
+    } else {
+      document.getElementById('setupScreen').style.display = 'none';
+      document.getElementById('appScreen').classList.add('visible');
+      await fetchTasks();
+    }
+  }
+
+  document.getElementById('newTitle').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTask();
+  });
+
+  document.getElementById('modalBg').addEventListener('click', e => {
+    if (e.target === document.getElementById('modalBg')) closeModal();
+  });
+
+  init();
+  setInterval(() => { if (getScriptUrl()) fetchTasks(); }, 5 * 60 * 1000); // refresh every 5 min
+</script>
+</body>
+</html>
